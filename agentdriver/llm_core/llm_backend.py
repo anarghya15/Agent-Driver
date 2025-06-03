@@ -29,6 +29,8 @@ class LLMBackend:
                 payload["functions"] = functions
             if function_call:
                 payload["function_call"] = function_call
+
+            print("Sending to Ollama:", payload)
             resp = requests.post(url, json=payload)
             resp.raise_for_status()
             return resp.json()

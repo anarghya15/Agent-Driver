@@ -8,7 +8,7 @@ from agentdriver.llm_core.timeout import timeout
 from agentdriver.llm_core.llm_backend import LLMBackend
 
 
-@timeout(15)
+@timeout(60)
 def run_one_round_conversation(
         full_messages: List[Dict], 
         system_message: str, 
