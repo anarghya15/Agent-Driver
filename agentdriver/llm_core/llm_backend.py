@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 
 class LLMBackend:
     def __init__(self, backend="openai", model_name="gpt-3.5-turbo-0613"):
@@ -31,8 +32,16 @@ class LLMBackend:
                 payload["function_call"] = function_call
 
             print("Sending to Ollama:", payload)
-            resp = requests.post(url, json=payload)
+            resp = requests.post(url, json=payload, stream=True)
             resp.raise_for_status()
-            return resp.json()
+            # Ollama streams JSON objects, one per line
+            lines = resp.iter_lines()
+            last = None
+            for line in lines:
+                if line:
+                    last = json.loads(line.decode("utf-8"))
+            if last is None:
+                raise RuntimeError("No response from Ollama.")
+            return last
         else:
             raise ValueError(f"Unknown backend: {self.backend}")
