@@ -53,6 +53,7 @@ def generate_messages(data_sample, use_peception=True, use_short_experience=True
 
 def planning_single_inference(
         planner_model_id, 
+        backend,
         data_sample, 
         data_dict=None, 
         self_reflection=True,
@@ -71,6 +72,7 @@ def planning_single_inference(
         user_message = user_message,
         temperature = 0.0,
         model_name = planner_model_id,
+        backend= backend
     )
     result = response_message["content"]
 
@@ -99,7 +101,7 @@ def planning_single_inference(
                 print(f"Optimized trajectory:\n {traj}")
     return traj, output_dict
 
-def planning_batch_inference(data_samples, planner_model_id, data_path, save_path, self_reflection=True, verbose=False):
+def planning_batch_inference(data_samples, planner_model_id, data_path, save_path, backend, self_reflection=True, verbose=False):
     
     save_file_name = save_path / Path("pred_trajs_dict.pkl")
     if os.path.exists(save_file_name):
@@ -124,7 +126,8 @@ def planning_batch_inference(data_samples, planner_model_id, data_path, save_pat
                 occ_filter_range=5.0, 
                 sigma=1.265, 
                 alpha_collision=7.89, 
-                verbose=verbose
+                verbose=verbose,
+                backend = backend
             )
             pred_trajs_dict[token] = traj
         except Exception as e:
@@ -151,4 +154,5 @@ if __name__ == "__main__":
         model_id= 'ft:gpt-3.5-turbo-0613:usc-gvl::8El3lxMY',
         save_path=save_path, 
         verbose=False,
+        backend="openai"
     )

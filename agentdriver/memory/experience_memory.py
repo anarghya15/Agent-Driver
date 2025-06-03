@@ -25,7 +25,7 @@ from agentdriver.functional_tools.prediction import (
 
 class ExperienceMemory:
     r"""Memory of Past Driving Experiences."""
-    def __init__(self, data_path, model_name = "gpt-3.5-turbo-0613", verbose=False, compare_perception=False) -> None:
+    def __init__(self, data_path, model_name = "gpt-3.5-turbo-0613", verbose=False, compare_perception=False, backend="openai") -> None:
         self.data_path = data_path / Path("memory") / Path("database.pkl")
         self.num_keys = 3
         self.keys = []
@@ -37,6 +37,7 @@ class ExperienceMemory:
         self.model_name = model_name
         self.verbose = verbose
         self.compare_perception = compare_perception
+        self.backend=backend
 
     def gen_vector_keys(self, data_dict):
         vx = data_dict['ego_states'][0]*0.5
@@ -148,6 +149,7 @@ class ExperienceMemory:
             system_message=mem_system_message,
             user_message=mem_prompts,
             model_name=self.model_name,
+            backend=self.backend
         )
  
         if self.verbose:

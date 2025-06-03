@@ -12,13 +12,14 @@ from agentdriver.planning.motion_planning import (
 )
 
 class PlanningAgent:
-    def __init__(self, model_name="", verbose=True) -> None:
+    def __init__(self, model_name="", verbose=True, backend="openai") -> None:
         self.verbose = verbose
         self.model_name = model_name # Note: this model must be a **finetuned** GPT model
         if model_name == "" or model_name[:2] != "ft":
             warnings.warn(f"Input motion planning model might not be correct, \
                   expect a fintuned model like ft:gpt-3.5-turbo-0613:your_org::your_model_id, \
                   but get {self.model_name}", UserWarning)
+        self.backend = backend
     
     def generate_planning_target(self, data_dict):
         planning_target = generate_planning_target(data_dict)
@@ -39,7 +40,8 @@ class PlanningAgent:
             planner_model_id=self.model_name, 
             data_sample = data_sample, 
             data_dict=data_dict, 
-            verbose=self.verbose
+            verbose=self.verbose,
+            backend=self.backend
         )
         return planning_traj
 
@@ -49,5 +51,6 @@ class PlanningAgent:
             planner_model_id=self.model_name, 
             data_path=data_path, 
             save_path=save_path,
+            backend=self.backend
         )
         return planning_traj_dict

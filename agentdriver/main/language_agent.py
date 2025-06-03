@@ -12,7 +12,16 @@ from agentdriver.reasoning.reasoning_agent import ReasoningAgent
 from agentdriver.planning.planning_agent import PlanningAgent
 
 class LanguageAgent:
-    def __init__(self, data_path, split, model_name = "gpt-3.5-turbo-0613", planner_model_name="", finetune_cot=False, verbose=False) -> None:
+    def __init__(
+        self, 
+        data_path, 
+        split, 
+        model_name="gpt-3.5-turbo-0613", 
+        planner_model_name="", 
+        finetune_cot=False, 
+        verbose=False,
+        backend="openai"
+    ) -> None:
         self.data_path = data_path
         self.split = split
         self.split_dict = json.load(open(Path(data_path) / "split.json", "r"))
@@ -22,14 +31,13 @@ class LanguageAgent:
         self.model_name = model_name
         self.planner_model_name = planner_model_name
         self.finetune_cot = finetune_cot
+        self.backend = backend
 
     def collect_planner_input(self, invalid_tokens=None):
-        r"""Collect perception results, ego states, memory, and chain-of-thoughts reasoning as planner input"""
         print("*"*10 + "Stage-1: Collecting Perception Data and Memory Retrieval" + "*"*10)
         save_dir = Path("experiments") / Path("finetune")
         save_dir.mkdir(exist_ok=True)
         save_file = save_dir / f"data_samples_{self.split}.json"
-        # Each time generate a new file
         if Path(save_file).exists() and invalid_tokens is None:
             os.system(f"rm {save_file}")
 
@@ -38,23 +46,48 @@ class LanguageAgent:
             if self.verbose:
                 print(token)
             try:
-                perception_agent = PerceptionAgent(token=token, split=self.split, data_path=self.data_path, model_name=self.model_name, verbose=self.verbose)
+                perception_agent = PerceptionAgent(
+                    token=token, 
+                    split=self.split, 
+                    data_path=self.data_path, 
+                    model_name=self.model_name, 
+                    verbose=self.verbose,
+                    backend=self.backend
+                )
                 ego_prompts, perception_prompts, working_memory = perception_agent.run()
 
                 if self.verbose:
                     print(perception_prompts)
 
-                memory_agent = MemoryAgent(data_path=self.data_path, model_name=self.model_name, verbose=self.verbose)
+                memory_agent = MemoryAgent(
+                    data_path=self.data_path, 
+                    model_name=self.model_name, 
+                    verbose=self.verbose,
+                    backend=self.backend
+                )
                 commonsense_mem, experience_mem = memory_agent.run(working_memory)
 
                 if self.verbose:
                     print(commonsense_mem)
                     print(experience_mem)
 
-                reasoning_agent = ReasoningAgent(model_name=self.model_name, verbose=self.verbose)
-                reasoning = reasoning_agent.run(perception_agent.data_dict, ego_prompts+perception_prompts, working_memory, use_cot_rules=self.finetune_cot)
+                reasoning_agent = ReasoningAgent(
+                    model_name=self.model_name, 
+                    verbose=self.verbose,
+                    backend=self.backend
+                )
+                reasoning = reasoning_agent.run(
+                    perception_agent.data_dict, 
+                    ego_prompts+perception_prompts, 
+                    working_memory, 
+                    use_cot_rules=self.finetune_cot
+                )
 
-                planning_agent = PlanningAgent(model_name=self.planner_model_name, verbose=self.verbose)
+                planning_agent = PlanningAgent(
+                    model_name=self.planner_model_name, 
+                    verbose=self.verbose,
+                    backend=self.backend
+                )
                 planning_target = planning_agent.generate_target(perception_agent.data_dict)
 
                 if self.verbose:
@@ -70,9 +103,9 @@ class LanguageAgent:
                     "planning_target": planning_target,
                 }
 
-                if self.finetune_cot: # if fine-tuning chain-of-thoughts, save rule-based chain_of_thoughts as target
+                if self.finetune_cot:
                     planner_input["chain_of_thoughts"] = reasoning
-                else: # otherwise, directly save reasoning results from GPT by in-context learning
+                else:
                     planner_input["reasoning"] = reasoning
 
                 with open(save_file, "a+") as f:
@@ -91,16 +124,40 @@ class LanguageAgent:
         return
 
     def inference_single(self, token, data_sample=None):
-        r"""Inference single scenario"""
         assert token in self.tokens
         if data_sample is None:
-            perception_agent = PerceptionAgent(token=token, split=self.split, data_path=self.data_path, model_name=self.model_name, verbose=self.verbose)
+            perception_agent = PerceptionAgent(
+                token=token, 
+                split=self.split, 
+                data_path=self.data_path, 
+                model_name=self.model_name, 
+                verbose=self.verbose,
+                backend=self.backend
+            )
             ego_prompts, perception_prompts, working_memory = perception_agent.run()
-            memory_agent = MemoryAgent(data_path=self.data_path, model_name=self.model_name, verbose=self.verbose)
+            memory_agent = MemoryAgent(
+                data_path=self.data_path, 
+                model_name=self.model_name, 
+                verbose=self.verbose,
+                backend=self.backend
+            )
             commonsense_mem, experience_mem = memory_agent.run(working_memory)
-            reasoning_agent = ReasoningAgent(model_name=self.model_name, verbose=self.verbose)
-            reasoning = reasoning_agent.run(perception_agent.data_dict, ego_prompts+perception_prompts, working_memory, use_cot_rules=self.finetune_cot)
-            planning_agent = PlanningAgent(model_name=self.planner_model_name, verbose=self.verbose)
+            reasoning_agent = ReasoningAgent(
+                model_name=self.model_name, 
+                verbose=self.verbose,
+                backend=self.backend
+            )
+            reasoning = reasoning_agent.run(
+                perception_agent.data_dict, 
+                ego_prompts+perception_prompts, 
+                working_memory, 
+                use_cot_rules=self.finetune_cot
+            )
+            planning_agent = PlanningAgent(
+                model_name=self.planner_model_name, 
+                verbose=self.verbose,
+                backend=self.backend
+            )
             planning_target = planning_agent.generate_planning_target(perception_agent.data_dict)
             data_sample = {
                 "token": token,
@@ -121,6 +178,11 @@ class LanguageAgent:
             reasoning = data_sample["reasoning"]        
             planning_target = data_sample["planning_target"]
            
+        planning_agent = PlanningAgent(
+            model_name=self.planner_model_name, 
+            verbose=self.verbose,
+            backend=self.backend
+        )
         planning_traj = planning_agent.run(
             data_dict=perception_agent.data_dict,
             data_sample=data_sample,
@@ -136,8 +198,11 @@ class LanguageAgent:
         return planning_traj
 
     def inference_all(self, data_samples, data_path, save_path):
-        """Inferencing all scenarios"""
-        planning_agent = PlanningAgent(model_name=self.planner_model_name, verbose=self.verbose)
+        planning_agent = PlanningAgent(
+            model_name=self.planner_model_name, 
+            verbose=self.verbose,
+            backend=self.backend
+        )
         planning_traj_dict = planning_agent.run_batch(
             data_samples=data_samples,
             data_path=data_path,

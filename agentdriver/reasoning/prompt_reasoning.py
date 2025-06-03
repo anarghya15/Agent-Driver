@@ -156,13 +156,14 @@ Thoughts:
 Meta Action: MOVE FORWARD WITH A CONSTANT SPEED
 """
 
-def generate_reasoning_results(env_info_prompts, model_name):
+def generate_reasoning_results(env_info_prompts, model_name, backend):
     # run the conversation
     _, response_message = run_one_round_conversation(
         full_messages=[],
         system_message=reasoning_system_prompt,
         user_message=env_info_prompts,
         model_name=model_name,
+        backend=backend,
     )
     reasoning_results = "*"*5 + "Chain of Thoughts Reasoning:" + "*"*5 + "\n"
     reasoning_results += response_message["content"]

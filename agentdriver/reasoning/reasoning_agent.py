@@ -10,9 +10,10 @@ from agentdriver.reasoning.prompt_reasoning import (
 )
 
 class ReasoningAgent:
-    def __init__(self, model_name="gpt-3.5-turbo-0613", verbose=True) -> None:
+    def __init__(self, model_name="gpt-3.5-turbo-0613", verbose=True, backend="openai") -> None:
         self.verbose = verbose
         self.model_name = model_name
+        self.backend=backend
 
     def generate_chain_of_thoughts_target(self, data_dict, working_memory):
         """Generating reasoning targets by rules, can be used as fine-tuning"""
@@ -24,7 +25,7 @@ class ReasoningAgent:
     @timeout(15)
     def generate_chain_of_thoughts_reasoning(self, env_info_prompts):
         """Generating chain_of_thoughts reasoning by GPT in-context learning"""
-        reasoning = generate_reasoning_results(env_info_prompts, self.model_name)
+        reasoning = generate_reasoning_results(env_info_prompts, self.model_name, self.backend)
         if self.verbose:
             print(reasoning)
         return reasoning
