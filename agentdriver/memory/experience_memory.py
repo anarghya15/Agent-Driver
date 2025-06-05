@@ -77,7 +77,20 @@ class ExperienceMemory:
     def compute_similarity(self, queries, token):
         """Compute the similarity between the current experience and the past experiences in the memory."""        
         diffs = []
-        for query, key, key_coef in zip(queries, self.keys, self.key_coefs):
+        for i, (query, key, key_coef) in enumerate(zip(queries, self.keys, self.key_coefs)):
+            query_shape = query.shape[0]
+            key_shape = key.shape[1]
+         
+            if query_shape < key_shape:
+                # Pad query with zeros if it's shorter
+                padding = np.zeros(key_shape - query_shape)
+                query = np.concatenate([query, padding])
+                queries[i] = query  # Update query in list
+                print(f"[DEBUG] Auto-padded query[{i}] from shape {query_shape} to {key_shape}")
+            
+            elif query_shape > key_shape:
+                raise ValueError(f"Query[{i}] is longer than expected: {query.shape} vs key[{i}]: {key.shape}")
+                
             squared_diffs = np.sum((query - key)**2, axis=1)
             diffs.append(squared_diffs * key_coef)
         diffs = sum(diffs)

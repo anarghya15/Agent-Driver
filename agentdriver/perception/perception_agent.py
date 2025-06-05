@@ -1,6 +1,7 @@
 from pathlib import Path
 import pickle
 import json
+import numpy as np
 
 from agentdriver.llm_core.chat import run_one_round_conversation, run_one_round_conversation_with_functional_call
 from agentdriver.llm_core.timeout import timeout
