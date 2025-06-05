@@ -22,7 +22,7 @@ class ReasoningAgent:
             print(reasoning)
         return reasoning
 
-    @timeout(15)
+    @timeout(60)
     def generate_chain_of_thoughts_reasoning(self, env_info_prompts):
         """Generating chain_of_thoughts reasoning by GPT in-context learning"""
         reasoning = generate_reasoning_results(env_info_prompts, self.model_name, self.backend)
@@ -30,7 +30,7 @@ class ReasoningAgent:
             print(reasoning)
         return reasoning
     
-    @timeout(15)
+    @timeout(60)
     def run(self, data_dict, env_info_prompts, working_memory, use_cot_rules=False):
         """Generate planning target and chain_of_thoughts reasoning"""
         if use_cot_rules:
