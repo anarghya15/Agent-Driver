@@ -27,7 +27,7 @@ class MemoryAgent:
     def update(self, working_memory):
         raise NotImplementedError
 
-    @timeout(15)
+    @timeout(60)
     def run(self, working_memory):
         common_sense_prompts = self.retrieve_common_sense_memory()
         experience_prompt = self.retrieve_experience_memory(working_memory)
