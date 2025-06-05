@@ -206,7 +206,7 @@ class PerceptionAgent:
         working_memory.update({"ego_prompts": ego_prompts})
         return
 
-    @timeout(15)
+    @timeout(60)
     def run(self):
         # You may want to implement the actual logic here
         ego_prompts = "ego_prompts"
