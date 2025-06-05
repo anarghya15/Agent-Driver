@@ -55,6 +55,7 @@ class LanguageAgent:
                     backend=self.backend
                 )
                 ego_prompts, perception_prompts, working_memory = perception_agent.run()
+                print('Working momory keys: ', working_memory.keys())
 
                 if self.verbose:
                     print(perception_prompts)
@@ -141,6 +142,8 @@ class LanguageAgent:
                 verbose=self.verbose,
                 backend=self.backend
             )
+
+            print('Working momory keys: ', working_memory.keys())
             commonsense_mem, experience_mem = memory_agent.run(working_memory)
             reasoning_agent = ReasoningAgent(
                 model_name=self.model_name, 
