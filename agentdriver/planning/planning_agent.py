@@ -27,13 +27,13 @@ class PlanningAgent:
             print(planning_target)
         return planning_target
 
-    @timeout(15)
+    @timeout(60)
     def generate_target(self, data_dict):
         """Generate planning target and chain_of_thoughts reasoning"""
         planning_target = self.generate_planning_target(data_dict)
         return planning_target
     
-    @timeout(15)
+    @timeout(60)
     def run(self, data_dict, data_sample):
         """Generate motion planning results for a single scene"""
         planning_traj = planning_single_inference(
