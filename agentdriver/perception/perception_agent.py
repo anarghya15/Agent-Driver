@@ -189,8 +189,15 @@ class PerceptionAgent:
         else:
             pass
 
+        dummy_ego_data = {
+            'ego_states': np.array([1.0]*9),
+            'ego_hist_traj_diff': np.array([[0.0, 0.0], [1.0, 1.0]]),
+            'ego_hist_traj': np.random.rand(5, 2),
+            'goal': np.array([0.0, 0.0])
+        }
+
         # For demonstration, return dummy values
-        return ego_prompts, "perception_prompts", {"token": self.token}
+        return ego_prompts, "perception_prompts", {"token": self.token, "ego_data": dummy_ego_data}
 
     def process_perception_results(self, ego_prompts, ego_data, full_messages, func_responses):
         perception_prompts = "*"*5 + "Perception Results:" + "*"*5 + "\n"
