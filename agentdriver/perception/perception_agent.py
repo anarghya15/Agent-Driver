@@ -197,8 +197,10 @@ class PerceptionAgent:
             'goal': np.array([0.0, 0.0])
         }
 
+        working_memory = self.process_perception_results(ego_prompts, dummy_ego_data, full_messages, {})
+
         # For demonstration, return dummy values
-        return ego_prompts, "perception_prompts", {"token": self.token, "ego_data": dummy_ego_data}
+        return ego_prompts, "perception_prompts", working_memory
 
     def process_perception_results(self, ego_prompts, ego_data, full_messages, func_responses):
         perception_prompts = "*"*5 + "Perception Results:" + "*"*5 + "\n"
@@ -212,7 +214,7 @@ class PerceptionAgent:
             pass
         working_memory.update({"perception_prompts": perception_prompts})
         working_memory.update({"ego_prompts": ego_prompts})
-        return
+        return working_memory
 
     @timeout(60)
     def run(self):
