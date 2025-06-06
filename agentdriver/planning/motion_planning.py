@@ -75,7 +75,7 @@ def planning_single_inference(
         backend= backend
     )
 
-    print('resopnse_message: ', response_message)
+    print('response_message: ', response_message)
     result = response_message["content"]
 
     if verbose:
@@ -91,7 +91,7 @@ def planning_single_inference(
     
     traj = result[result.find('[') : result.find(']')+1]
     print("Extracted traj string:", repr(traj))
-    traj = ast.literal_eval(traj)
+    # traj = ast.literal_eval(traj)
     if traj and traj.startswith('[') and traj.endswith(']'):
         traj = ast.literal_eval(traj)
         traj = np.array(traj)
