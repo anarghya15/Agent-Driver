@@ -75,7 +75,6 @@ def planning_single_inference(
         backend= backend
     )
 
-    print('response_message: ', response_message)
     result = response_message["content"]
 
     if verbose:
