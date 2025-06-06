@@ -32,8 +32,8 @@ class LLMBackend:
                 payload["function_call"] = function_call
 
             resp = requests.post(url, json=payload, stream=True)
-            print("Response received from Ollama:", resp)
             resp.raise_for_status()
+            
             # Ollama streams JSON objects, one per line
             response_content = ""
             last_data = None
@@ -46,7 +46,6 @@ class LLMBackend:
                         response_content += data["message"]["content"]
             if last_data is None:
                 raise RuntimeError("No response from Ollama.")
-            print("Final full response content:", response_content)
             return response_content
         else:
             raise ValueError(f"Unknown backend: {self.backend}")
