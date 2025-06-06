@@ -135,7 +135,8 @@ class PerceptionAgent:
             print(detection_response)
 
         if detection_response.get("content", "") == "YES":
-            pass
+            # pass
+            generate_detection_func_prompt()
         else:
             pass
 
@@ -152,7 +153,8 @@ class PerceptionAgent:
             print(prediction_response)
 
         if prediction_response.get("content", "") == "YES":
-            pass
+            # pass
+            generate_prediction_func_prompt()
         else:
             pass
 
@@ -169,7 +171,8 @@ class PerceptionAgent:
             print(occupancy_response)
 
         if occupancy_response.get("content", "") == "YES":
-            pass
+            # pass
+            generate_occupancy_func_prompt()
         else:
             pass
 
@@ -186,7 +189,8 @@ class PerceptionAgent:
             print(map_response)
 
         if map_response.get("content", "") == "YES":
-            pass
+            # pass
+            generate_map_func_prompt()
         else:
             pass
 
