@@ -143,7 +143,7 @@ class LanguageAgent:
                 backend=self.backend
             )
 
-            print('Working momory keys: ', working_memory.keys())
+            # print('Working momory keys: ', working_memory.keys())
             commonsense_mem, experience_mem = memory_agent.run(working_memory)
             reasoning_agent = ReasoningAgent(
                 model_name=self.model_name, 
