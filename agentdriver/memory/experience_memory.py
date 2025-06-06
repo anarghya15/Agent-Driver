@@ -86,7 +86,7 @@ class ExperienceMemory:
                 padding = np.zeros(key_shape - query_shape)
                 query = np.concatenate([query, padding])
                 queries[i] = query  # Update query in list
-                print(f"[DEBUG] Auto-padded query[{i}] from shape {query_shape} to {key_shape}")
+                # print(f"[DEBUG] Auto-padded query[{i}] from shape {query_shape} to {key_shape}")
             
             elif query_shape > key_shape:
                 raise ValueError(f"Query[{i}] is longer than expected: {query.shape} vs key[{i}]: {key.shape}")
