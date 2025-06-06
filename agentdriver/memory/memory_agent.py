@@ -7,10 +7,10 @@ from agentdriver.memory.experience_memory import ExperienceMemory
 class MemoryAgent:
     def __init__(self, data_path, model_name="gpt-3.5-turbo-0613", verbose=False, compare_perception=False, backend="openai") -> None:
         self.model_name = model_name
-        self.common_sense_memory = CommonSenseMemory()
-        self.experience_memory = ExperienceMemory(data_path, model_name=self.model_name, verbose=verbose, compare_perception=compare_perception)
+        self.common_sense_memory = CommonSenseMemory()        
         self.verbose = verbose
         self.backend = backend
+        self.experience_memory = ExperienceMemory(data_path, model_name=self.model_name, verbose=verbose, compare_perception=compare_perception, self.backend)
 
     def retrieve(self, working_memory):
         raise NotImplementedError
