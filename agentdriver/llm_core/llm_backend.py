@@ -31,8 +31,8 @@ class LLMBackend:
             if function_call:
                 payload["function_call"] = function_call
 
-            print("Sending to Ollama:", payload)
             resp = requests.post(url, json=payload, stream=True)
+            print("Response received from Ollama:", resp)
             resp.raise_for_status()
             # Ollama streams JSON objects, one per line
             lines = resp.iter_lines()
@@ -42,6 +42,7 @@ class LLMBackend:
                     last = json.loads(line.decode("utf-8"))
             if last is None:
                 raise RuntimeError("No response from Ollama.")
+            print("Formatted Response:", last)
             return last
         else:
             raise ValueError(f"Unknown backend: {self.backend}")
