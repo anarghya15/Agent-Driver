@@ -74,6 +74,8 @@ def planning_single_inference(
         model_name = planner_model_id,
         backend= backend
     )
+
+    print('resopnse_message: ', response_message)
     result = response_message["content"]
 
     if verbose:
