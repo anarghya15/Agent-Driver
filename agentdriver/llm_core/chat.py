@@ -49,8 +49,16 @@ def run_one_round_conversation(
     llm = LLMBackend(backend=backend, model_name=model_name)
     
     response = llm.chat(messages=full_messages, temperature=temperature)
-    
-    response_message = response["choices"][0]["message"] if backend == "openai" else response["message"]
+    if backend == "openai":
+        response_message = response["choices"][0]["message"]
+    elif backend == "ollama":
+        # Wrap as a message dict, so the rest of your code expects the same format
+        response_message = {
+            "role": "assistant",
+            "content": response
+        }
+    else:
+        raise ValueError(f"Unknown backend: {backend}")
     
     full_messages.append(response_message)
     
