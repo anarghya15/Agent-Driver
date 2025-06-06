@@ -10,7 +10,7 @@ class MemoryAgent:
         self.common_sense_memory = CommonSenseMemory()        
         self.verbose = verbose
         self.backend = backend
-        self.experience_memory = ExperienceMemory(data_path, model_name=self.model_name, verbose=verbose, compare_perception=compare_perception, self.backend)
+        self.experience_memory = ExperienceMemory(data_path, model_name=self.model_name, verbose=verbose, compare_perception=compare_perception, backend=self.backend)
 
     def retrieve(self, working_memory):
         raise NotImplementedError
