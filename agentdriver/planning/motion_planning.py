@@ -90,7 +90,13 @@ def planning_single_inference(
     traj = result[result.find('[') : result.find(']')+1]
     print("Extracted traj string:", repr(traj))
     traj = ast.literal_eval(traj)
-    traj = np.array(traj)
+    if traj and traj.startswith('[') and traj.endswith(']'):
+        traj = ast.literal_eval(traj)
+        traj = np.array(traj)
+    else:
+        print(f"Warning: Could not extract valid trajectory from LLM output: {result}")
+        traj = None
+        traj = np.array(traj)
 
     if self_reflection:
         assert data_dict is not None
