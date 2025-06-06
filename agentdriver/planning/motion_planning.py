@@ -88,6 +88,7 @@ def planning_single_inference(
     }
     
     traj = result[result.find('[') : result.find(']')+1]
+    print("Extracted traj string:", repr(traj))
     traj = ast.literal_eval(traj)
     traj = np.array(traj)
 
