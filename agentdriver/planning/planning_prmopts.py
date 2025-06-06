@@ -17,5 +17,5 @@ Task:
 - Based on inputs, plan a safe, feasible 3-second trajectory of 6 waypoints.
 
 Output:
-Planned Trajectory:\n[(x1,y1), (x2,y2), ... , (x6,y6)]
+Return the planned trajectory as a Python list of 6 (x, y) tuples, in this format: Planned Trajectory:\n [(-0.5, 7.4), (-0.3, 7.45), ...], and nothing else. Do not use variable names or sample code, only actual numbers. 
 """
