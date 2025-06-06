@@ -197,7 +197,7 @@ class PerceptionAgent:
             'goal': np.array([0.0, 0.0])
         }
 
-        working_memory = self.process_perception_results(ego_prompts, dummy_ego_data, full_messages, {})
+        working_memory = self.process_perception_results(ego_prompts, dummy_ego_data, full_messages, func_responses)
 
         # For demonstration, return dummy values
         return ego_prompts, "perception_prompts", working_memory
